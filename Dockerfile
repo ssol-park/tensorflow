@@ -21,7 +21,7 @@ COPY requirements.txt /app/
 RUN pip install -r requirements.txt
 
 # 애플리케이션 코드 복사
-COPY test.py /app/
+COPY scripts/ /app/scripts/
 
 # 실행 명령어
-CMD ["python", "test.py"]
+# CMD ["python", "test.py"]
