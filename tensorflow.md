@@ -83,4 +83,53 @@ print("Variable Tensor (after):", var_tensor)
 3. **`tf.reduce_mean`**:
   - 텐서의 모든 요소(또는 축 지정 시 해당 축의 값)를 평균 계산
   - 입력: `tf.Tensor([4, 9])` → 출력: `6.5` (평균)
-장
+
+### lab03 & lab04
+**`tf.random.set_seed`**:
+- 난수 생성기의 시드를 설정하여 동일한 코드 실행 시 일관된 난수 값을 생성. 재현 가능성을보장하기 위해 사용됨
+
+``` python
+  tf.random.set_seed(777)
+  print(tf.random.normal([1]))  # 항상 동일한 결과값 출력
+```
+
+**`tf.optimizers.SGD`**:
+- Stochastic Gradient Descent (SGD) 옵티마이저를 생성. learning rate 를 입력받아 모델의 파라미터를 업데이트하는 데 사용
+
+``` python
+  optimizer = tf.optimizers.SGD(learning_rate=0.01) # SGD 옵티마이저 인스턴스 생성
+```
+
+**`tf.GradientTape`**:
+- 자동 미분을 위해 사용되는 클래스. 연산의 모든 과정을 기록하여, 이후 특정 변수에 대한 기울기(gradient)를 계산
+
+``` python
+  x = tf.Variable(3.0)
+  with tf.GradientTape() as tape:
+      y = x**2
+  grad = tape.gradient(y, x)  # dy/dx = 2 * x
+  print(grad)  # 출력: tf.Tensor(6.0, shape=(), dtype=float32)
+```
+**`zip`**:
+- Python 내장 함수로, 여러 iterable 객체를 병렬 처리하기 위해 묶음
+- 입력: `zip([1, 2], ['a', 'b'])` → 결과: 병렬로 `(1, 'a')와 (2, 'b')` 형태의 튜플 생성
+- TensorFlow 에서 사용: `zip(gradients, variables)` 로 기울기와 변수 쌍을 묶어 `apply_gradients` 에 전달  
+
+``` python
+  gradients = [0.1, 0.2]
+  variables = ['w1', 'w2']
+  for g, v in zip(gradients, variables):
+      print(g, v)  # 출력: 0.1 w1 / 0.2 w2
+```
+**`optimizer.apply_gradients`**:
+- 계산된 기울기를 기반으로 파라미터를 업데이트
+- 입력: `optimizer.apply_gradients(zip(gradients, variables))`
+→ 결과: 변수들이 기울기를 반영하여 업데이트
+
+``` python
+  gradients = [tf.constant(0.1), tf.constant(0.2)]
+  variables = [tf.Variable(1.0), tf.Variable(2.0)]
+  optimizer = tf.optimizers.SGD(learning_rate=0.1)
+  optimizer.apply_gradients(zip(gradients, variables))
+  print(variables[0].numpy())  # 결과: 0.99 (1.0 - 0.1 * 0.1)
+```
