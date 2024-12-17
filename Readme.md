@@ -2,6 +2,7 @@
 docker build -t tensorflow .
 
 ## 컨테이너 실행
+가docker run -it --rm --name tensorflow -v $(pwd):/app -w /app/scripts tensorflow python <파일명>
 docker run -it --rm --name tensorflow -v $(pwd):/app -v $(pwd)/data:/app/data -w /app/scripts tensorflow python <파일명>
 
 
@@ -300,9 +301,32 @@ docker run -it --rm --name tensorflow -v $(pwd):/app -v $(pwd)/data:/app/data -w
 로지스틱 회귀는 선형 회귀를 확장하여 확률 기반의 분류 문제를 해결한다.  
 시그모이드 함수와 로그 손실을 통해 예측값을 확률로 변환하고, 이를 기반으로 최적의 분류 모델을 학습한다.
 
+# Softmax Classification
+소프트맥스 분류는 다중 클래스 분류 문제를 해결하기 위한 확률 기반의 모델이다.
+로지스틱 회귀를 확장한 형태로, 각 클래스에 속할 확률을 계산하여 가장 확률이 높은 클래스를 예측하는 알고리즘이다.
 
+- 예: 숫자 이미지 인식 (0~9), 이메일이 개인/업무/스팸 중 어떤 유형인지 분류하는 문제.
+- 상세: /images/lab06*
 
 ---
+### argmax 란?
+
+- 주어진 배열(또는 행렬)에서 가장 큰 값의 인덱스를 반환하는 함수
+- 예: [0.1, 0.7, 0.2], argmax 는 1을 반환 한다.
+- 사용목적
+  - argmax는 주어진 데이터에서 가장 확률이 높은 선택이나 가장 중요한 위치를 빠르게 찾을 때 사용된다.
+  - 예: 인공지능 모델이 동물을 분류하는 상황에서 가장 높은 확률의 클래스를 예측하는 데 사용
+  
+
+### One-Hot-Vector 란?
+
+- 특정 클래스만을 1로 표시하고 나머지는 0으로 표현하는 벡터
+- 예: 위의(argmax) 예시 에서 1이 정답 이라면, 원 핫 벡터 => [0, 1, 0]
+- 사용목적
+  - 원 핫 벡터는 데이터의 명확한 표현과 정확한 구분을 위해 사용된다.
+    특히, 클래스(범주형 데이터)를 컴퓨터가 이해할 수 있는 형태로 변환할 때 매우 유용하다.
+  - 예: 고양이, 강아지, 토끼를 각각 [1,0,0],[0,1,0],[0,0,1]로 표현하면, 컴퓨터는 이를 숫자 데이터로 인식하고 학습하거나 계산할 수 있다.
+
 ## Reference
 모두를 위한 딥러닝 강좌 시즌 1 - https://www.youtube.com/watch?v=BS6O0zOGX4E&list=PLlMkM4tgfjnLSOjrEJN31gZATbcj_MpUm&index=1
 
